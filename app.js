@@ -35,6 +35,8 @@ function showOnly(section) {
     el.classList.toggle("hidden", el !== section);
   });
   document.body.classList.toggle("on-start", section === start);
+  document.body.classList.toggle("on-lesson", section === lesson);
+  document.body.classList.toggle("on-result", section === result);
   window.scrollTo(0, 0);
 }
 
@@ -45,7 +47,7 @@ function showSlide(nextSlide) {
 
   const who = document.createElement("p");
   who.className = "who";
-  who.textContent = `الشارح: ${page.name}`;
+  who.textContent = page.name;
 
   const heading = document.createElement("h2");
   heading.textContent = page.heading;
@@ -201,19 +203,15 @@ function finish() {
 
 function showQr() {
   const img = document.getElementById("qr-img");
-  const label = document.getElementById("share-url");
-  const url = window.location.href.split("#")[0];
-  const local =
-    url.startsWith("file:") || url.includes("localhost") || url.includes("127.0.0.1");
-
   img.classList.add("hidden");
-  if (local) {
-    label.textContent = "رمز QR يظهر بعد فتح الموقع من رابط النشر.";
-    return;
-  }
-
-  label.textContent = url;
   img.onload = () => img.classList.remove("hidden");
   img.onerror = () => img.classList.add("hidden");
   img.src = "qr.png";
 }
+
+function openQuizFromLink() {
+  if (location.hash === "#quiz") startQuiz();
+}
+
+openQuizFromLink();
+window.addEventListener("hashchange", openQuizFromLink);

@@ -60,6 +60,27 @@ body.on-start .btn {
   padding: 14px 28px;
 }
 
+body.on-lesson .wrap,
+body.on-result .wrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 28px 0;
+}
+
+body.on-lesson #lesson {
+  width: 100%;
+  min-height: 72vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+body.on-result #result {
+  width: 100%;
+  text-align: center;
+}
+
 .badge {
   display: inline-block;
   max-width: 100%;
@@ -70,6 +91,13 @@ body.on-start .btn {
   font-size: 0.85rem;
   padding: 4px 12px;
   border-radius: 999px;
+}
+
+.badge-wide {
+  display: block;
+  width: 100%;
+  padding: 12px 18px;
+  font-size: 1.2rem;
 }
 
 .panel {
@@ -316,12 +344,6 @@ h3 {
   background: var(--white);
   padding: 8px;
   border-radius: 12px;
-}
-
-.share-url {
-  color: var(--muted);
-  word-break: break-all;
-  font-size: 0.92rem;
 }
 
 .hidden {
