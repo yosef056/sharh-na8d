@@ -10,9 +10,7 @@ const counterEl = document.getElementById("counter");
 const liveScoreEl = document.getElementById("live-score");
 const barEl = document.getElementById("bar");
 
-const slides = [LESSON.speaker1, LESSON.speaker2].flatMap((speaker) =>
-  speaker.blocks.map((block) => ({ ...block }))
-);
+const slides = LESSON;
 
 let slide = 0;
 let index = 0;

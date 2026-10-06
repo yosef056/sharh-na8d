@@ -31,10 +31,6 @@ body.on-result {
 .wrap {
   width: min(760px, calc(100% - 32px));
   margin: 0 auto;
-  padding: 36px 0 72px;
-}
-
-body.on-start .wrap {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -43,9 +39,14 @@ body.on-start .wrap {
   padding: 28px 0;
 }
 
-body.on-start .panel {
+.panel {
   width: 100%;
-  text-align: center;
+  height: auto;
+  flex: 0 0 auto;
+  background: var(--card);
+  border: 1px solid rgba(244, 196, 48, 0.35);
+  border-radius: 20px;
+  padding: 28px 24px;
 }
 
 body.on-start h1 {
@@ -67,27 +68,8 @@ body.on-start .btn {
   padding: 14px 28px;
 }
 
-body.on-lesson .wrap,
-body.on-quiz .wrap,
-body.on-result .wrap {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 28px 0;
-}
-
-body.on-lesson #lesson,
-body.on-quiz #quiz,
-body.on-result #result {
-  width: 100%;
-}
-
-body.on-lesson .panel,
-body.on-quiz .panel,
-body.on-result .panel {
-  padding: 22px 20px;
+body.on-start .panel {
+  text-align: center;
 }
 
 body.on-result #result {
@@ -116,11 +98,8 @@ body.on-result #result {
   border-radius: 999px;
 }
 
-.panel {
-  background: var(--card);
-  border: 1px solid rgba(244, 196, 48, 0.35);
-  border-radius: 20px;
-  padding: 28px 24px;
+#lesson > p:not(.example) {
+  margin: 0 0 8px;
 }
 
 h1,
