@@ -11,7 +11,7 @@ const liveScoreEl = document.getElementById("live-score");
 const barEl = document.getElementById("bar");
 
 const slides = [LESSON.speaker1, LESSON.speaker2].flatMap((speaker) =>
-  speaker.blocks.map((block) => ({ name: speaker.name, ...block }))
+  speaker.blocks.map((block) => ({ ...block }))
 );
 
 let slide = 0;
