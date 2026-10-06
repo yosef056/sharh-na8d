@@ -1,6 +1,5 @@
 const start = document.getElementById("start");
-const speaker1 = document.getElementById("speaker-1");
-const speaker2 = document.getElementById("speaker-2");
+const lesson = document.getElementById("lesson");
 const quiz = document.getElementById("quiz");
 const result = document.getElementById("result");
 const questionEl = document.getElementById("question");
@@ -11,64 +10,93 @@ const counterEl = document.getElementById("counter");
 const liveScoreEl = document.getElementById("live-score");
 const barEl = document.getElementById("bar");
 
+const slides = [LESSON.speaker1, LESSON.speaker2].flatMap((speaker) =>
+  speaker.blocks.map((block) => ({ name: speaker.name, ...block }))
+);
+
+let slide = 0;
 let index = 0;
 let score = 0;
 let locked = false;
+const picks = [];
 
-document.getElementById("to-speaker-1").addEventListener("click", () => {
-  showOnly(speaker1);
-});
+document.getElementById("to-speaker-1").addEventListener("click", () => showSlide(0));
 document.getElementById("retry-btn").addEventListener("click", () => {
+  index = 0;
+  score = 0;
+  picks.length = 0;
   showOnly(start);
 });
+document.getElementById("quiz-back").addEventListener("click", quizBack);
 nextBtn.addEventListener("click", next);
 
-renderSpeaker(speaker1, LESSON.speaker1, "التالي: الجزء الثاني", () => showOnly(speaker2));
-renderSpeaker(speaker2, LESSON.speaker2, "ابدأ الأسئلة", startQuiz);
-
-function renderSpeaker(section, data, buttonLabel, onNext) {
-  const who = document.createElement("p");
-  who.className = "who";
-  who.textContent = `الشارح: ${data.name}`;
-
-  const part = document.createElement("p");
-  part.className = "part";
-  part.textContent = data.part;
-
-  section.append(who, part);
-
-  data.blocks.forEach((block) => {
-    const wrap = document.createElement("div");
-    wrap.className = "block";
-    const heading = document.createElement("h3");
-    heading.textContent = block.heading;
-    wrap.append(heading);
-    block.paragraphs.forEach((text) => {
-      const p = document.createElement("p");
-      p.textContent = text;
-      wrap.append(p);
-    });
-    section.append(wrap);
-  });
-
-  const button = document.createElement("button");
-  button.type = "button";
-  button.className = "btn";
-  button.textContent = buttonLabel;
-  button.addEventListener("click", onNext);
-  section.append(button);
-}
-
 function showOnly(section) {
-  [start, speaker1, speaker2, quiz, result].forEach((el) => {
+  [start, lesson, quiz, result].forEach((el) => {
     el.classList.toggle("hidden", el !== section);
   });
+  document.body.classList.toggle("on-start", section === start);
   window.scrollTo(0, 0);
+}
+
+function showSlide(nextSlide) {
+  slide = nextSlide;
+  const page = slides[slide];
+  lesson.replaceChildren();
+
+  const who = document.createElement("p");
+  who.className = "who";
+  who.textContent = `الشارح: ${page.name}`;
+
+  const heading = document.createElement("h2");
+  heading.textContent = page.heading;
+
+  lesson.append(who, heading);
+
+  page.paragraphs.forEach((text) => {
+    const p = document.createElement("p");
+    p.textContent = text;
+    lesson.append(p);
+  });
+
+  const example = document.createElement("p");
+  example.className = "example";
+  const label = document.createElement("span");
+  label.className = "example-label";
+  label.textContent = "مثال";
+  example.append(label, document.createTextNode(page.example));
+  lesson.append(example);
+
+  const actions = document.createElement("div");
+  actions.className = "actions";
+
+  const back = document.createElement("button");
+  back.type = "button";
+  back.className = "btn btn-ghost";
+  back.textContent = "رجوع";
+  back.addEventListener("click", () => {
+    if (slide === 0) showOnly(start);
+    else showSlide(slide - 1);
+  });
+
+  const forward = document.createElement("button");
+  forward.type = "button";
+  forward.className = "btn";
+  const last = slide === slides.length - 1;
+  forward.textContent = last ? "ابدأ الأسئلة" : "التالي";
+  forward.addEventListener("click", () => {
+    if (last) startQuiz();
+    else showSlide(slide + 1);
+  });
+
+  actions.append(back, forward);
+  lesson.append(actions);
+  showOnly(lesson);
 }
 
 function startQuiz() {
   index = 0;
   score = 0;
+  picks.length = 0;
   locked = false;
   showOnly(quiz);
   showQuestion();
@@ -76,7 +104,7 @@ function startQuiz() {
 
 function showQuestion() {
   const item = QUESTIONS[index];
-  locked = false;
+  locked = picks[index] !== undefined;
   nextBtn.classList.add("hidden");
   explainEl.className = "explain";
   explainEl.textContent = "";
@@ -85,36 +113,45 @@ function showQuestion() {
   liveScoreEl.textContent = `صح: ${score}`;
   barEl.style.width = `${(index / QUESTIONS.length) * 100}%`;
   questionEl.textContent = item.q;
-  choicesEl.innerHTML = "";
+  choicesEl.replaceChildren();
 
   item.choices.forEach((text, i) => {
     const btn = document.createElement("button");
     btn.type = "button";
     btn.className = "choice";
-    btn.textContent = text;
-    btn.addEventListener("click", () => pick(i, btn));
-    choicesEl.appendChild(btn);
+    const label = document.createElement("span");
+    label.textContent = text;
+    btn.append(label);
+    btn.addEventListener("click", () => pick(i));
+    choicesEl.append(btn);
   });
+
+  if (picks[index] !== undefined) reveal(picks[index]);
 }
 
-function pick(choiceIndex, btn) {
+function pick(choiceIndex) {
   if (locked) return;
   locked = true;
+  picks[index] = choiceIndex;
+  if (choiceIndex === QUESTIONS[index].answer) score += 1;
+  reveal(choiceIndex);
+}
 
+function reveal(choiceIndex) {
   const item = QUESTIONS[index];
   const buttons = [...choicesEl.querySelectorAll(".choice")];
-  buttons.forEach((b, i) => {
-    b.disabled = true;
-    if (i === item.answer) b.classList.add("right");
-  });
-
   const correct = choiceIndex === item.answer;
-  if (correct) {
-    score += 1;
-    btn.classList.add("right");
-  } else {
-    btn.classList.add("wrong");
-  }
+
+  buttons.forEach((button, i) => {
+    button.disabled = true;
+    if (i === item.answer) {
+      button.classList.add("right");
+      addMark(button, "✓");
+    } else if (i === choiceIndex) {
+      button.classList.add("wrong");
+      addMark(button, "✗");
+    }
+  });
 
   liveScoreEl.textContent = `صح: ${score}`;
   explainEl.className = "explain show";
@@ -125,6 +162,22 @@ function pick(choiceIndex, btn) {
 
   nextBtn.textContent = index === QUESTIONS.length - 1 ? "النتيجة" : "التالي";
   nextBtn.classList.remove("hidden");
+}
+
+function addMark(button, symbol) {
+  const mark = document.createElement("span");
+  mark.className = "mark";
+  mark.textContent = symbol;
+  button.prepend(mark);
+}
+
+function quizBack() {
+  if (index === 0) {
+    showSlide(slides.length - 1);
+    return;
+  }
+  index -= 1;
+  showQuestion();
 }
 
 function next() {

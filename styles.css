@@ -27,6 +27,39 @@ body {
   padding: 36px 0 72px;
 }
 
+body.on-start .wrap {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 28px 0;
+}
+
+body.on-start .panel {
+  width: 100%;
+  text-align: center;
+}
+
+body.on-start h1 {
+  font-size: clamp(2.6rem, 7vw, 3.6rem);
+}
+
+body.on-start .made,
+body.on-start .team-label,
+body.on-start .team li {
+  font-size: 1.35rem;
+}
+
+body.on-start .team {
+  justify-content: center;
+}
+
+body.on-start .btn {
+  font-size: 1.25rem;
+  padding: 14px 28px;
+}
+
 .badge {
   display: inline-block;
   max-width: 100%;
@@ -55,8 +88,8 @@ h3 {
 }
 
 h1 {
-  margin: 0 0 8px;
-  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  margin: 0 0 12px;
+  font-size: clamp(2.2rem, 5vw, 3rem);
 }
 
 h2 {
@@ -149,6 +182,9 @@ h3 {
 }
 
 .choice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   text-align: right;
   width: 100%;
   font: inherit;
@@ -158,6 +194,13 @@ h3 {
   border-radius: 12px;
   padding: 12px 14px;
   cursor: pointer;
+}
+
+.mark {
+  flex: 0 0 auto;
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1;
 }
 
 .choice:hover:not(:disabled) {
@@ -201,6 +244,32 @@ h3 {
   margin-bottom: 4px;
 }
 
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.actions .btn {
+  margin-top: 0;
+}
+
+.example {
+  margin: 18px 0 0;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(244, 196, 48, 0.1);
+  border-right: 4px solid var(--gold);
+}
+
+.example-label {
+  display: block;
+  color: var(--gold);
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
 .btn {
   margin-top: 18px;
   font: inherit;
@@ -211,6 +280,12 @@ h3 {
   border-radius: 12px;
   padding: 12px 20px;
   cursor: pointer;
+}
+
+.btn-ghost {
+  color: var(--gold);
+  background: transparent;
+  border: 1px solid var(--gold);
 }
 
 .btn:hover {

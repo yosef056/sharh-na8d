@@ -12,13 +12,13 @@
     />
     <link rel="stylesheet" href="styles.css" />
   </head>
-  <body>
+  <body class="on-start">
     <main class="wrap">
       <p class="badge">أولى ثانوي · التفكير الناقد ومهارات الحياة · الدرس الرابع</p>
 
       <section id="start" class="panel">
         <h1>التفكير الناقد والحوار</h1>
-        <p class="made">صنع من المهندس يوسف</p>
+        <p class="made">المبرمج يوسف</p>
         <p class="team-label">فريق الشرح</p>
         <ul class="team">
           <li>إياد</li>
@@ -26,14 +26,10 @@
           <li>محمد</li>
           <li>ثنيان</li>
         </ul>
-        <p class="lead">
-          شرح مرتب لشخصين: الأول يخلّص جزأه، ثم الثاني يكمل الباقي. بعد الشرح عشرة أسئلة.
-        </p>
         <button class="btn" id="to-speaker-1" type="button">ابدأ الشرح</button>
       </section>
 
-      <section id="speaker-1" class="panel hidden"></section>
-      <section id="speaker-2" class="panel hidden"></section>
+      <section id="lesson" class="panel hidden"></section>
 
       <section id="quiz" class="panel hidden">
         <div class="meta">
@@ -44,7 +40,10 @@
         <h2 id="question"></h2>
         <div class="choices" id="choices"></div>
         <div class="explain" id="explain"></div>
-        <button class="btn hidden" id="next-btn" type="button">التالي</button>
+        <div class="actions">
+          <button class="btn btn-ghost" id="quiz-back" type="button">رجوع</button>
+          <button class="btn hidden" id="next-btn" type="button">التالي</button>
+        </div>
       </section>
 
       <section id="result" class="panel hidden">
