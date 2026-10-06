@@ -36,6 +36,7 @@ function showOnly(section) {
   });
   document.body.classList.toggle("on-start", section === start);
   document.body.classList.toggle("on-lesson", section === lesson);
+  document.body.classList.toggle("on-quiz", section === quiz);
   document.body.classList.toggle("on-result", section === result);
   window.scrollTo(0, 0);
 }
@@ -45,14 +46,10 @@ function showSlide(nextSlide) {
   const page = slides[slide];
   lesson.replaceChildren();
 
-  const who = document.createElement("p");
-  who.className = "who";
-  who.textContent = page.name;
-
   const heading = document.createElement("h2");
   heading.textContent = page.heading;
 
-  lesson.append(who, heading);
+  lesson.append(heading);
 
   page.paragraphs.forEach((text) => {
     const p = document.createElement("p");
