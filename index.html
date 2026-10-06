@@ -7,59 +7,59 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Tajawal:wght@400;500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <main class="wrap">
-      <p class="badge">أولى ثانوي · الوحدة الأولى · الدرس الرابع</p>
-      <h1>التفكير الناقد والحوار</h1>
-      <p class="lead">
-        أسئلة قصيرة من درس التفكير الناقد والحوار. اختر الإجابة ثم اقرأ الشرح.
-      </p>
+      <p class="badge">أولى ثانوي · التفكير الناقد ومهارات الحياة · الدرس الرابع</p>
 
-      <section id="home" class="card">
-        <p>
-          الحوار تواصل هادئ لفهم الآخر، لا مسابقة للفوز. التفكير الناقد يساعدنا
-          نسمع، نسأل، ونطلب الدليل.
+      <section id="start" class="panel">
+        <h1>التفكير الناقد والحوار</h1>
+        <p class="made">صنع من المهندس يوسف</p>
+        <p class="team-label">فريق الشرح</p>
+        <ul class="team">
+          <li>إياد</li>
+          <li>يوسف العماري</li>
+          <li>محمد</li>
+          <li>ثنيان</li>
+        </ul>
+        <p class="lead">
+          شرح مرتب لشخصين: الأول يخلّص جزأه، ثم الثاني يكمل الباقي. بعد الشرح عشرة أسئلة.
         </p>
-        <div class="actions">
-          <button class="btn btn-main" id="start-btn" type="button">ابدأ الأسئلة</button>
-        </div>
+        <button class="btn" id="to-speaker-1" type="button">ابدأ الشرح</button>
       </section>
 
-      <section id="quiz" class="card hidden">
+      <section id="speaker-1" class="panel hidden"></section>
+      <section id="speaker-2" class="panel hidden"></section>
+
+      <section id="quiz" class="panel hidden">
         <div class="meta">
           <span id="counter"></span>
           <span id="live-score"></span>
         </div>
-        <div class="progress"><span id="bar"></span></div>
+        <div class="progress" aria-hidden="true"><span id="bar"></span></div>
         <h2 id="question"></h2>
         <div class="choices" id="choices"></div>
         <div class="explain" id="explain"></div>
-        <div class="actions">
-          <button class="btn btn-main hidden" id="next-btn" type="button">التالي</button>
-        </div>
+        <button class="btn hidden" id="next-btn" type="button">التالي</button>
       </section>
 
-      <section id="result" class="card hidden">
+      <section id="result" class="panel hidden">
         <p class="badge">انتهيت</p>
         <p class="score" id="final-score"></p>
         <p id="final-msg"></p>
-        <div class="actions">
-          <button class="btn btn-main" id="retry-btn" type="button">إعادة</button>
-        </div>
+        <button class="btn" id="retry-btn" type="button">إعادة من البداية</button>
         <div class="qr-box">
-          <p>شارك الموقع: صوّر الرمز أو انسخ الرابط</p>
-          <img id="qr-img" alt="رمز QR للموقع" />
-          <p id="share-url"></p>
+          <p>شارك الدرس بهذا الرمز</p>
+          <img id="qr-img" class="hidden" alt="رمز QR لفتح الموقع" width="180" height="180" />
+          <p id="share-url" class="share-url"></p>
         </div>
       </section>
-
-      <footer>منهج التفكير الناقد ومهارات الحياة · المملكة العربية السعودية</footer>
     </main>
+    <script src="lesson.js"></script>
     <script src="questions.js"></script>
     <script src="app.js"></script>
   </body>

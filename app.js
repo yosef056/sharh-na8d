@@ -1,4 +1,6 @@
-const home = document.getElementById("home");
+const start = document.getElementById("start");
+const speaker1 = document.getElementById("speaker-1");
+const speaker2 = document.getElementById("speaker-2");
 const quiz = document.getElementById("quiz");
 const result = document.getElementById("result");
 const questionEl = document.getElementById("question");
@@ -13,17 +15,62 @@ let index = 0;
 let score = 0;
 let locked = false;
 
-document.getElementById("start-btn").addEventListener("click", start);
-document.getElementById("retry-btn").addEventListener("click", start);
+document.getElementById("to-speaker-1").addEventListener("click", () => {
+  showOnly(speaker1);
+});
+document.getElementById("retry-btn").addEventListener("click", () => {
+  showOnly(start);
+});
 nextBtn.addEventListener("click", next);
 
-function start() {
+renderSpeaker(speaker1, LESSON.speaker1, "التالي: الجزء الثاني", () => showOnly(speaker2));
+renderSpeaker(speaker2, LESSON.speaker2, "ابدأ الأسئلة", startQuiz);
+
+function renderSpeaker(section, data, buttonLabel, onNext) {
+  const who = document.createElement("p");
+  who.className = "who";
+  who.textContent = `الشارح: ${data.name}`;
+
+  const part = document.createElement("p");
+  part.className = "part";
+  part.textContent = data.part;
+
+  section.append(who, part);
+
+  data.blocks.forEach((block) => {
+    const wrap = document.createElement("div");
+    wrap.className = "block";
+    const heading = document.createElement("h3");
+    heading.textContent = block.heading;
+    wrap.append(heading);
+    block.paragraphs.forEach((text) => {
+      const p = document.createElement("p");
+      p.textContent = text;
+      wrap.append(p);
+    });
+    section.append(wrap);
+  });
+
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "btn";
+  button.textContent = buttonLabel;
+  button.addEventListener("click", onNext);
+  section.append(button);
+}
+
+function showOnly(section) {
+  [start, speaker1, speaker2, quiz, result].forEach((el) => {
+    el.classList.toggle("hidden", el !== section);
+  });
+  window.scrollTo(0, 0);
+}
+
+function startQuiz() {
   index = 0;
   score = 0;
   locked = false;
-  home.classList.add("hidden");
-  result.classList.add("hidden");
-  quiz.classList.remove("hidden");
+  showOnly(quiz);
   showQuestion();
 }
 
@@ -31,7 +78,7 @@ function showQuestion() {
   const item = QUESTIONS[index];
   locked = false;
   nextBtn.classList.add("hidden");
-  explainEl.classList.remove("show");
+  explainEl.className = "explain";
   explainEl.textContent = "";
 
   counterEl.textContent = `سؤال ${index + 1} من ${QUESTIONS.length}`;
@@ -61,7 +108,8 @@ function pick(choiceIndex, btn) {
     if (i === item.answer) b.classList.add("right");
   });
 
-  if (choiceIndex === item.answer) {
+  const correct = choiceIndex === item.answer;
+  if (correct) {
     score += 1;
     btn.classList.add("right");
   } else {
@@ -69,8 +117,12 @@ function pick(choiceIndex, btn) {
   }
 
   liveScoreEl.textContent = `صح: ${score}`;
-  explainEl.textContent = item.explain;
-  explainEl.classList.add("show");
+  explainEl.className = "explain show";
+  const verdict = document.createElement("span");
+  verdict.className = "verdict";
+  verdict.textContent = correct ? "صح" : "خطأ";
+  explainEl.append(verdict, item.explain);
+
   nextBtn.textContent = index === QUESTIONS.length - 1 ? "النتيجة" : "التالي";
   nextBtn.classList.remove("hidden");
 }
@@ -85,32 +137,30 @@ function next() {
 }
 
 function finish() {
-  quiz.classList.add("hidden");
-  result.classList.remove("hidden");
-  barEl.style.width = "100%";
-  document.getElementById("final-score").textContent =
-    `${score} / ${QUESTIONS.length}`;
+  showOnly(result);
+  document.getElementById("final-score").textContent = `${score} / ${QUESTIONS.length}`;
   document.getElementById("final-msg").textContent =
     score >= 8
-      ? "ممتاز. راجعت أفكار الدرس الرابع جيدًا."
-      : "حاول مرة ثانية، واقرأ الشرح بعد كل سؤال.";
+      ? "ممتاز. الشرح والأسئلة صارت واضحة."
+      : "ارجع للشرح، ثم أعد الأسئلة.";
   showQr();
 }
 
 function showQr() {
-  const url = window.location.href;
   const img = document.getElementById("qr-img");
   const label = document.getElementById("share-url");
+  const url = window.location.href.split("#")[0];
+  const local =
+    url.startsWith("file:") || url.includes("localhost") || url.includes("127.0.0.1");
 
-  if (url.startsWith("http://") || url.startsWith("https://")) {
-    img.src =
-      "https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=" +
-      encodeURIComponent(url);
-    img.classList.remove("hidden");
-    label.textContent = url;
-  } else {
-    img.classList.add("hidden");
-    label.textContent =
-      "رمز QR يظهر بعد رفع الموقع أونلاين (مو من فتح الملف على الجهاز).";
+  img.classList.add("hidden");
+  if (local) {
+    label.textContent = "رمز QR يظهر بعد فتح الموقع من رابط النشر.";
+    return;
   }
+
+  label.textContent = url;
+  img.onload = () => img.classList.remove("hidden");
+  img.onerror = () => img.classList.add("hidden");
+  img.src = "qr.png";
 }
